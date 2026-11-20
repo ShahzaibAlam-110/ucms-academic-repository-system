@@ -1,0 +1,10 @@
+# UCMS Apache Configuration
+# Prioritize index.php so Apache delivers the unified application in XAMPP
+DirectoryIndex index.php dist/index.html index.html
+
+# Prevent directory browsing
+Options -Indexes +FollowSymLinks
+
+# Set UTF-8 encoding
+AddDefaultCharset UTF-8
+

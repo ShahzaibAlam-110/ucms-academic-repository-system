@@ -1,0 +1,361 @@
+/* =====================================================================
+   UCMS UNIFIED 5-IN-1 DIGITAL CAMPUS PORTAL - STYLESHEET
+   Institution: University College of Management and Sciences (UCMS), Khanewal
+   Clean, modern CSS3 with zero horizontal overflow & mobile media queries
+   ===================================================================== */
+
+:root {
+  --ucms-navy: #1e3a8a;
+  --ucms-navy-hover: #172554;
+  --ucms-navy-light: #eff6ff;
+  --ucms-gold: #d97706;
+  --ucms-gold-light: #fef3c7;
+  --ucms-bg: #f8fafc;
+  --ucms-surface: #ffffff;
+  --ucms-border: #e2e8f0;
+  --ucms-border-dark: #cbd5e1;
+  --ucms-text-main: #0f172a;
+  --ucms-text-muted: #64748b;
+  --ucms-danger: #dc2626;
+  --ucms-success: #16a34a;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--ucms-bg);
+  color: var(--ucms-text-main);
+  line-height: 1.5;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =====================================================================
+   TOP HEADER (Sticky 64px, Zero Overflow, 3-Zone Contract)
+   ===================================================================== */
+.ucms-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--ucms-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  overflow: hidden;
+}
+
+.ucms-brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.ucms-seal-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--ucms-gold);
+  padding: 1px;
+  background: #ffffff;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(217, 119, 6, 0.2);
+  flex-shrink: 0;
+}
+
+.ucms-brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.ucms-brand-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--ucms-navy);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.ucms-brand-sub {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ucms-gold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ucms-nav-desktop {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.ucms-nav-link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ucms-text-muted);
+  text-decoration: none;
+  padding: 0.375rem 0.625rem;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ucms-nav-link:hover, .ucms-nav-link.active {
+  color: var(--ucms-navy);
+  background: var(--ucms-navy-light);
+}
+
+.ucms-header-action {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Mobile Hamburger Menu */
+.ucms-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 38px;
+  height: 38px;
+  background: transparent;
+  border: 1px solid var(--ucms-border);
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ucms-hamburger span {
+  width: 100%;
+  height: 2px;
+  background: var(--ucms-navy);
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.ucms-mobile-drawer {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  border-bottom: 1px solid var(--ucms-border);
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  z-index: 49;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ucms-mobile-drawer.open {
+  display: flex;
+}
+
+/* =====================================================================
+   CAMPUS BACKGROUND DISCIPLINE
+   ===================================================================== */
+.ucms-campus-bg {
+  position: relative;
+  background-color: #f8fafc;
+}
+
+.ucms-campus-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('/assets/aistudio/images-extractpics_fa9aed82.jpg'), url('/campus.jpg');
+  background-size: cover;
+  background-position: center 30%;
+  background-repeat: no-repeat;
+  opacity: 0.32;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ucms-solid-bg {
+  background-color: #f8fafc;
+  position: relative;
+}
+
+.ucms-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* =====================================================================
+   CARDS & SURFACES
+   ===================================================================== */
+.ucms-card {
+  background: #ffffff;
+  border: 1px solid var(--ucms-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.ucms-card:hover {
+  border-color: var(--ucms-border-dark);
+}
+
+.ucms-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ucms-btn-primary {
+  background: var(--ucms-navy);
+  color: #ffffff;
+}
+
+.ucms-btn-primary:hover {
+  background: var(--ucms-navy-hover);
+}
+
+.ucms-btn-secondary {
+  background: #ffffff;
+  color: var(--ucms-navy);
+  border-color: var(--ucms-border);
+}
+
+.ucms-btn-secondary:hover {
+  background: var(--ucms-navy-light);
+  border-color: var(--ucms-navy);
+}
+
+.ucms-btn-gold {
+  background: var(--ucms-gold);
+  color: #ffffff;
+}
+
+.ucms-btn-gold:hover {
+  background: #b45309;
+}
+
+/* Form Controls */
+.ucms-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--ucms-text-main);
+  margin-bottom: 0.375rem;
+}
+
+.ucms-input, .ucms-select, .ucms-textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.875rem;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--ucms-border-dark);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ucms-text-main);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ucms-input:focus, .ucms-select:focus, .ucms-textarea:focus {
+  outline: none;
+  border-color: var(--ucms-navy);
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+}
+
+/* Modal Overlay */
+.ucms-modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.ucms-modal-backdrop.open {
+  display: flex;
+}
+
+.ucms-modal-content {
+  background: #ffffff;
+  border: 1px solid var(--ucms-border);
+  border-radius: 14px;
+  max-width: 580px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  padding: 2rem;
+}
+
+/* =====================================================================
+   RESPONSIVE MEDIA QUERIES
+   ===================================================================== */
+@media (max-width: 1023px) {
+  .ucms-nav-desktop {
+    display: none;
+  }
+
+  .ucms-hamburger {
+    display: flex;
+  }
+
+  .ucms-grid-3col {
+    grid-template-columns: 1fr !important;
+  }
+
+  .ucms-hero-split {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ucms-grid-3col {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .ucms-hero-split {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+}
