@@ -114,12 +114,16 @@ export interface Announcement {
   audience: 'all' | 'students' | 'teachers' | 'cs_only';
   priority: 'normal' | 'important' | 'urgent';
   author: string;
-  uploader_role?: 'HOD CS' | 'ADMIN' | string;
+  uploader_role?: 'HOD CS' | 'ADMIN' | 'FACULTY' | string;
   uploader_name?: string;
   deadline?: string;
   deadline_display?: string;
   created_at: string;
   is_read?: boolean;
+  attachment_name?: string;
+  attachment_url?: string;
+  attachment_type?: 'image' | 'pdf' | 'doc' | 'file';
+  attachment_size?: string;
 }
 
 export interface AcademicAssessment {
@@ -154,6 +158,7 @@ export interface StudentReport {
   created_at: string;
   course_code?: string;
   handout_title?: string;
+  handout_name?: string;
   slot_info?: string;
   week_text?: string;
   error_tag?: 'TYPO/ERROR' | 'MISSING PAGES' | 'CLARIFICATION' | string;
@@ -1337,6 +1342,10 @@ export const INITIAL_ANNOUNCEMENTS: Announcement[] = [
     uploader_name: 'Dr. Tariq Mahmood',
     created_at: '29 Oct 2026',
     is_read: false,
+    attachment_name: 'Midterm_Moderation_Guidelines_Fall2026.pdf',
+    attachment_url: '#',
+    attachment_type: 'pdf',
+    attachment_size: '1.4 MB',
   },
   {
     id: 102,
@@ -1349,6 +1358,10 @@ export const INITIAL_ANNOUNCEMENTS: Announcement[] = [
     uploader_name: 'Central Academic Administration',
     created_at: '24 Oct 2026',
     is_read: false,
+    attachment_name: 'Official_Directive_Notice.jpg',
+    attachment_url: './campus.jpg',
+    attachment_type: 'image',
+    attachment_size: '680 KB',
   },
   {
     id: 103,
@@ -1386,6 +1399,10 @@ export const INITIAL_ANNOUNCEMENTS: Announcement[] = [
     uploader_name: 'Central Academic Administration',
     created_at: 'Apr 28, 2025',
     is_read: false,
+    attachment_name: 'Official_Midterm_DateSheet_Spring2025.pdf',
+    attachment_url: '#',
+    attachment_type: 'pdf',
+    attachment_size: '840 KB',
   },
   {
     id: 2,
@@ -1410,6 +1427,10 @@ export const INITIAL_ANNOUNCEMENTS: Announcement[] = [
     uploader_name: 'Dr. Muhammad Asif (Head of Department)',
     created_at: 'Apr 21, 2025',
     is_read: true,
+    attachment_name: 'Cloud_Workshop_Brochure_Poster.jpg',
+    attachment_url: './campus.jpg',
+    attachment_type: 'image',
+    attachment_size: '1.2 MB',
   },
   {
     id: 4,

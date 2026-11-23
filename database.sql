@@ -215,6 +215,10 @@ CREATE TABLE `announcements` (
   `audience` ENUM('all', 'students', 'teachers', 'cs_only') NOT NULL DEFAULT 'all',
   `priority` ENUM('normal', 'important', 'urgent') NOT NULL DEFAULT 'normal',
   `author_id` INT UNSIGNED NOT NULL,
+  `attachment_name` VARCHAR(255) DEFAULT NULL,
+  `attachment_url` VARCHAR(500) DEFAULT NULL,
+  `attachment_type` VARCHAR(50) DEFAULT NULL,
+  `attachment_size` VARCHAR(50) DEFAULT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT `fk_ann_author` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

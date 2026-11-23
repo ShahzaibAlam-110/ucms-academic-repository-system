@@ -42,6 +42,7 @@ import {
   INITIAL_ASSESSMENTS,
 } from '../data/mockDatabase';
 import { triggerPdfDownload } from '../utils/pdfGenerator';
+import { AnnouncementAttachment } from './AnnouncementAttachment';
 
 interface StudentWorkspaceProps {
   user: User;
@@ -1133,6 +1134,13 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                                     <span className="text-xs font-bold text-slate-800">
                                       Uploaded by: <strong className="text-slate-900 font-extrabold">{uploaderDisplayName}</strong>
                                     </span>
+                                    {notice.attachment_name && (
+                                      <AnnouncementAttachment
+                                        compact
+                                        attachmentName={notice.attachment_name}
+                                        attachmentType={notice.attachment_type}
+                                      />
+                                    )}
                                   </div>
 
                                   <span className="text-[11px] text-slate-400 font-mono">
@@ -1167,6 +1175,15 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                                   <p className="leading-relaxed font-normal bg-white p-3.5 rounded-xl border border-slate-200 text-slate-700 whitespace-pre-line">
                                     {notice.content}
                                   </p>
+
+                                  {/* Attached Document or Image (if present) */}
+                                  <AnnouncementAttachment
+                                    attachmentName={notice.attachment_name}
+                                    attachmentUrl={notice.attachment_url}
+                                    attachmentType={notice.attachment_type}
+                                    attachmentSize={notice.attachment_size}
+                                  />
+
                                   <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 pt-1 border-t border-slate-100">
                                     <div className="flex items-center gap-2">
                                       <span className="font-semibold text-emerald-800 flex items-center gap-1">
@@ -1594,6 +1611,13 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                                 <span className="text-xs font-bold text-slate-800">
                                   Uploaded by: <strong className="text-slate-900 font-extrabold">{uploaderDisplayName}</strong>
                                 </span>
+                                {notice.attachment_name && (
+                                  <AnnouncementAttachment
+                                    compact
+                                    attachmentName={notice.attachment_name}
+                                    attachmentType={notice.attachment_type}
+                                  />
+                                )}
                               </div>
 
                               <span className="text-[11px] text-slate-400 font-mono">
@@ -1630,6 +1654,15 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                           <p className="leading-relaxed font-normal bg-white p-3.5 rounded-xl border border-slate-100">
                             {notice.content}
                           </p>
+
+                          {/* Attached Document or Image (if present) */}
+                          <AnnouncementAttachment
+                            attachmentName={notice.attachment_name}
+                            attachmentUrl={notice.attachment_url}
+                            attachmentType={notice.attachment_type}
+                            attachmentSize={notice.attachment_size}
+                          />
+
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] text-slate-400 pt-1">
                             <span>Status: {notice.is_read ? 'Marked as Reviewed' : 'Unread'}</span>
                             <span className="text-emerald-700 font-semibold">✓ Verified Institutional Circular Dispatch</span>

@@ -26,23 +26,26 @@ Experience the full interactive client application live on GitHub Pages:
 - **Academic Handouts & Resources**: Browse, search, and download course handouts and syllabus documents with version history.
 - **Timetable & Schedule Viewer**: Filter class timetables by semester, section, and day.
 - **Assessments & Performance**: Access continuous assessment scores, midterms, finals, and GPA tracking.
-- **Campus Announcements**: Real-time institutional circulars and notifications.
+- **Campus Announcements & Attachments**: Real-time circulars with preview and download support for attached documents, photos, flyers, and page notifications.
 
 ### 👩‍🏫 2. Faculty / Teacher Workspace
 - **Resource Management**: Upload, update, and manage syllabus documents, lecture notes, and revision versions.
 - **Academic Grading**: Record and submit student evaluations, assignments, and test scores.
 - **Course Allocations**: View assigned department courses, enrolled student lists, and classroom schedules.
+- **Course & Class Updates**: Broadcast notices with optional document, image, or page notification attachments.
 
 ### 🏛️ 3. Head of Department (HOD) Workspace
 - **Curriculum & Syllabus Oversight**: Approve, reject, or request revisions for department handouts.
 - **Course & Faculty Allocation**: Assign faculty members to courses and manage department sections.
 - **Department Timetable Management**: Resolve room conflicts and coordinate schedules.
 - **Academic Health Reports**: Monitor department GPA averages and student submission stats.
+- **Department Directives with Attachments**: Broadcast official notices with optional PDF circulars, images, or documents.
 
 ### ⚙️ 4. Administrator Workspace
 - **User & Account Management**: Full CRUD for Student, Teacher, and HOD accounts with role-based permissions (RBAC).
 - **Institutional CMS Settings**: Configure university logos, campus banners, academic calendar dates, and contact information.
 - **Audit Logging**: Trace administrative operations, logins, resource updates, and system events.
+- **Campus-Wide Broadcasts**: Issue university-wide circulars with optional document and image attachments.
 
 ---
 

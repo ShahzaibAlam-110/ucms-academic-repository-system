@@ -25,6 +25,8 @@ import {
   Bell,
   GraduationCap,
   ChevronRight,
+  Send,
+  Paperclip,
 } from 'lucide-react';
 import {
   User,
@@ -37,6 +39,8 @@ import {
   AcademicAssessment,
   INITIAL_ASSESSMENTS,
 } from '../data/mockDatabase';
+import { AttachmentUploader, AttachmentData } from './AttachmentUploader';
+import { AnnouncementAttachment } from './AnnouncementAttachment';
 
 interface FacultyWorkspaceProps {
   user: User;
@@ -51,6 +55,7 @@ interface FacultyWorkspaceProps {
   onSelectTab?: (tab: 'dashboard' | 'courses' | 'timetable' | 'handouts' | 'notices') => void;
   onOpenProfileModal?: () => void;
   onLogout?: () => void;
+  onAddAnnouncement?: (announcement: Omit<Announcement, 'id' | 'created_at'>) => void;
   onUploadHandout: (
     courseId: number,
     title: string,
@@ -80,6 +85,7 @@ export const FacultyWorkspace: React.FC<FacultyWorkspaceProps> = ({
   onUploadHandout,
   onResolveReport,
   onCreateAssessment,
+  onAddAnnouncement,
 }) => {
   // Local fallback if activeTab is not controlled from header
   const [localTab, setLocalTab] = useState<'dashboard' | 'courses' | 'timetable' | 'handouts' | 'notices'>('dashboard');
@@ -87,6 +93,45 @@ export const FacultyWorkspace: React.FC<FacultyWorkspaceProps> = ({
   const switchTab = (t: 'dashboard' | 'courses' | 'timetable' | 'handouts' | 'notices') => {
     if (onSelectTab) onSelectTab(t);
     else setLocalTab(t);
+  };
+
+  // Faculty Broadcast / Update state
+  const [isPostingNotice, setIsPostingNotice] = useState(false);
+  const [facultyNoticeTitle, setFacultyNoticeTitle] = useState('');
+  const [facultyNoticeContent, setFacultyNoticeContent] = useState('');
+  const [facultyNoticeAudience, setFacultyNoticeAudience] = useState<'students' | 'all' | 'cs_only'>('students');
+  const [facultyNoticePriority, setFacultyNoticePriority] = useState<'normal' | 'urgent'>('normal');
+  const [facultyNoticeAttachment, setFacultyNoticeAttachment] = useState<AttachmentData | null>(null);
+  const [facultyNoticeSuccess, setFacultyNoticeSuccess] = useState('');
+
+  const handleFacultyNoticeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!facultyNoticeTitle.trim() || !facultyNoticeContent.trim()) return;
+
+    if (onAddAnnouncement) {
+      onAddAnnouncement({
+        title: facultyNoticeTitle,
+        content: facultyNoticeContent,
+        audience: facultyNoticeAudience,
+        priority: facultyNoticePriority,
+        author: user.full_name,
+        uploader_role: 'FACULTY',
+        uploader_name: user.full_name,
+        attachment_name: facultyNoticeAttachment?.name,
+        attachment_url: facultyNoticeAttachment?.url,
+        attachment_type: facultyNoticeAttachment?.type,
+        attachment_size: facultyNoticeAttachment?.size,
+      });
+    }
+
+    setFacultyNoticeTitle('');
+    setFacultyNoticeContent('');
+    setFacultyNoticeAttachment(null);
+    setFacultyNoticeSuccess('Class update & notice broadcasted successfully across student portals.');
+    setTimeout(() => {
+      setFacultyNoticeSuccess('');
+      setIsPostingNotice(false);
+    }, 3500);
   };
 
   // Assigned Courses for Faculty
@@ -872,6 +917,13 @@ export const FacultyWorkspace: React.FC<FacultyWorkspaceProps> = ({
                             <span className="text-xs font-bold text-slate-800">
                               Uploaded by: <strong className="text-slate-900 font-extrabold">{senderName}</strong>
                             </span>
+                            {notice.attachment_name && (
+                              <AnnouncementAttachment
+                                compact
+                                attachmentName={notice.attachment_name}
+                                attachmentType={notice.attachment_type}
+                              />
+                            )}
                           </div>
 
                           <span className="text-[11px] text-slate-400 font-mono">
@@ -906,6 +958,15 @@ export const FacultyWorkspace: React.FC<FacultyWorkspaceProps> = ({
                           <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-700 leading-relaxed font-normal whitespace-pre-line">
                             {notice.content}
                           </div>
+
+                          {/* Attached Document or Image (if present) */}
+                          <AnnouncementAttachment
+                            attachmentName={notice.attachment_name}
+                            attachmentUrl={notice.attachment_url}
+                            attachmentType={notice.attachment_type}
+                            attachmentSize={notice.attachment_size}
+                          />
+
                           <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 pt-1 border-t border-slate-100">
                             <span className="font-semibold text-emerald-800 flex items-center gap-1">
                               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Authorized Notice from {senderName} ({senderRole})
@@ -1727,14 +1788,125 @@ export const FacultyWorkspace: React.FC<FacultyWorkspaceProps> = ({
             {/* SUBTAB 2: DEPARTMENT NOTICES (MATCHING VIDEO 00:38 - 00:40) */}
             {noticesSubtab === 'department' && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-base font-black text-slate-900">
-                    Department Circulars & Memos
-                  </h2>
-                  <span className="text-xs text-slate-500">
-                    Head of Department & Academic Administration Notices
-                  </span>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-base font-black text-slate-900">
+                      Department Circulars & Class Updates
+                    </h2>
+                    <span className="text-xs text-slate-500">
+                      Head of Department, Academic Administration & Faculty Notices
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsPostingNotice(!isPostingNotice)}
+                    className="px-3.5 py-2 bg-blue-900 hover:bg-blue-950 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs self-start sm:self-auto"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-amber-300" />
+                    <span>{isPostingNotice ? 'Close Form' : 'Post Class Update / Notice'}</span>
+                  </button>
                 </div>
+
+                {/* Faculty Post Notice Form (Collapsible) */}
+                {isPostingNotice && (
+                  <div className="bg-[#f8fafc] border border-blue-200 rounded-2xl p-5 space-y-4 animate-in fade-in duration-150">
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                      <div className="flex items-center gap-2">
+                        <Send className="w-4 h-4 text-blue-900" />
+                        <h3 className="text-sm font-bold text-slate-900">
+                          Post New Course / Class Update
+                        </h3>
+                      </div>
+                      <span className="text-[11px] font-semibold text-slate-500">
+                        Instructor: {user.full_name}
+                      </span>
+                    </div>
+
+                    {facultyNoticeSuccess && (
+                      <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-800 flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        <span>{facultyNoticeSuccess}</span>
+                      </div>
+                    )}
+
+                    <form onSubmit={handleFacultyNoticeSubmit} className="space-y-3.5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-bold text-slate-700 mb-1">Target Audience</label>
+                          <select
+                            value={facultyNoticeAudience}
+                            onChange={(e) => setFacultyNoticeAudience(e.target.value as any)}
+                            className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl bg-white font-medium text-slate-700"
+                          >
+                            <option value="students">Enrolled Students in My Courses</option>
+                            <option value="cs_only">All Computer Science Students</option>
+                            <option value="all">Entire Department</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-slate-700 mb-1">Notice Priority</label>
+                          <select
+                            value={facultyNoticePriority}
+                            onChange={(e) => setFacultyNoticePriority(e.target.value as any)}
+                            className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl bg-white font-medium text-slate-700"
+                          >
+                            <option value="normal">Standard Class Notice</option>
+                            <option value="urgent">[URGENT] High Priority Update</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">Notice Headline</label>
+                        <input
+                          type="text"
+                          value={facultyNoticeTitle}
+                          onChange={(e) => setFacultyNoticeTitle(e.target.value)}
+                          placeholder="e.g. Rescheduled Lab Session, Assignment Submission Guidelines..."
+                          className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-1 focus:ring-blue-900 font-medium"
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">Detailed Message / Directive</label>
+                        <textarea
+                          rows={3}
+                          value={facultyNoticeContent}
+                          onChange={(e) => setFacultyNoticeContent(e.target.value)}
+                          placeholder="Provide all guidelines, room numbers, deadlines, or instructions..."
+                          className="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-1 focus:ring-blue-900 font-medium"
+                          required
+                        />
+                      </div>
+
+                      {/* Optional Document, Image, or Page Notification Attachment */}
+                      <AttachmentUploader
+                        attachment={facultyNoticeAttachment}
+                        onAttachmentChange={setFacultyNoticeAttachment}
+                        label="Attach Document, Image, or Page Notification"
+                        helperText="Optional: You can attach a document (PDF, Word, TXT), image (PNG, JPG), or page format notification. Leave empty if no file is needed."
+                      />
+
+                      <div className="flex justify-end gap-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => setIsPostingNotice(false)}
+                          className="px-4 py-2 border border-slate-200 hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="px-5 py-2 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
+                        >
+                          <Send className="w-3.5 h-3.5 text-amber-300" />
+                          <span>Broadcast Class Notice →</span>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
 
                 <div className="space-y-3">
                   {facultyAnnouncements.map((ann) => {
@@ -1776,6 +1948,13 @@ export const FacultyWorkspace: React.FC<FacultyWorkspaceProps> = ({
                               <span className="text-xs font-bold text-slate-800">
                                 Uploaded by: <strong className="text-slate-900 font-extrabold">{senderName}</strong>
                               </span>
+                              {ann.attachment_name && (
+                                <AnnouncementAttachment
+                                  compact
+                                  attachmentName={ann.attachment_name}
+                                  attachmentType={ann.attachment_type}
+                                />
+                              )}
                             </div>
 
                             <span className="text-[11px] text-slate-400 font-mono">
@@ -1810,6 +1989,15 @@ export const FacultyWorkspace: React.FC<FacultyWorkspaceProps> = ({
                             <p className="leading-relaxed font-medium whitespace-pre-line bg-slate-50 p-3.5 rounded-xl border border-slate-200">
                               {ann.content}
                             </p>
+
+                            {/* Attached Document or Image (if present) */}
+                            <AnnouncementAttachment
+                              attachmentName={ann.attachment_name}
+                              attachmentUrl={ann.attachment_url}
+                              attachmentType={ann.attachment_type}
+                              attachmentSize={ann.attachment_size}
+                            />
+
                             <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-[11px] text-slate-500">
                               <span className="text-emerald-700 font-bold flex items-center gap-1">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Verified Dispatch by {senderName} ({senderRole})

@@ -46,6 +46,8 @@ import {
 } from 'lucide-react';
 import { User, Department, CmsSettings, AuditLog, TimetableSlot, Course, Announcement, StudentReport } from '../data/mockDatabase';
 import { usePKTClock, formatPKTDateTimeString } from '../utils/timeUtils';
+import { AttachmentUploader, AttachmentData } from './AttachmentUploader';
+import { AnnouncementAttachment } from './AnnouncementAttachment';
 
 interface AdminWorkspaceProps {
   user: User;
@@ -185,6 +187,7 @@ export const AdminWorkspace: React.FC<AdminWorkspaceProps> = ({
   const [broadcastContent, setBroadcastContent] = useState('');
   const [broadcastAudience, setBroadcastAudience] = useState<'all' | 'students' | 'teachers'>('all');
   const [broadcastPriority, setBroadcastPriority] = useState<'normal' | 'urgent'>('normal');
+  const [broadcastAttachment, setBroadcastAttachment] = useState<AttachmentData | null>(null);
   const [broadcastSuccess, setBroadcastSuccess] = useState('');
   const [broadcastHistory, setBroadcastHistory] = useState<Announcement[]>([
     {
@@ -197,6 +200,10 @@ export const AdminWorkspace: React.FC<AdminWorkspaceProps> = ({
       uploader_role: 'ADMIN',
       uploader_name: 'Registrar Admin',
       created_at: 'Spring 2025 · PKT',
+      attachment_name: 'Central_Midterm_DateSheet_Spring2025.pdf',
+      attachment_url: '#',
+      attachment_type: 'pdf',
+      attachment_size: '1.2 MB',
     },
     {
       id: 802,
@@ -522,6 +529,10 @@ export const AdminWorkspace: React.FC<AdminWorkspaceProps> = ({
       uploader_name: 'Registrar Admin',
       created_at: formatPKTDateTimeString(),
       is_read: false,
+      attachment_name: broadcastAttachment?.name,
+      attachment_url: broadcastAttachment?.url,
+      attachment_type: broadcastAttachment?.type,
+      attachment_size: broadcastAttachment?.size,
     };
 
     setBroadcastHistory((prev) => [newBroadcast, ...prev]);
@@ -534,11 +545,16 @@ export const AdminWorkspace: React.FC<AdminWorkspaceProps> = ({
         author: 'Chief Registrar & Central Administration',
         uploader_role: 'ADMIN',
         uploader_name: 'Registrar Admin',
+        attachment_name: broadcastAttachment?.name,
+        attachment_url: broadcastAttachment?.url,
+        attachment_type: broadcastAttachment?.type,
+        attachment_size: broadcastAttachment?.size,
       });
     }
 
     setBroadcastTitle('');
     setBroadcastContent('');
+    setBroadcastAttachment(null);
     setBroadcastSuccess('Campus-wide institutional notice broadcasted across public and authenticated portals.');
     setTimeout(() => setBroadcastSuccess(''), 4500);
   };
@@ -1985,6 +2001,14 @@ export const AdminWorkspace: React.FC<AdminWorkspaceProps> = ({
                   />
                 </div>
 
+                {/* Optional Document, Image, or Page Notification Attachment */}
+                <AttachmentUploader
+                  attachment={broadcastAttachment}
+                  onAttachmentChange={setBroadcastAttachment}
+                  label="Attach Circular Document / Image / Page Notification"
+                  helperText="Optional: You can attach a document (PDF, Word, TXT), image/flyer (PNG, JPG), or page format notification. Leave empty if no file is needed."
+                />
+
                 <div className="flex justify-end">
                   <button
                     type="submit"
@@ -2032,6 +2056,14 @@ export const AdminWorkspace: React.FC<AdminWorkspaceProps> = ({
 
                     <h4 className="text-sm sm:text-base font-extrabold text-slate-900">{b.title}</h4>
                     <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-line">{b.content}</p>
+
+                    {/* Attached Document or Image (if present) */}
+                    <AnnouncementAttachment
+                      attachmentName={b.attachment_name}
+                      attachmentUrl={b.attachment_url}
+                      attachmentType={b.attachment_type}
+                      attachmentSize={b.attachment_size}
+                    />
 
                     <div className="pt-2 flex justify-end">
                       <button

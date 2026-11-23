@@ -107,6 +107,7 @@ export const Header: React.FC<HeaderProps> = ({
     id: 'faculty' | 'courses' | 'timetable' | 'notices';
     label: string;
     icon: React.ElementType;
+    badge?: number | string;
   }> = [
     { id: 'faculty', label: 'Faculty Hub', icon: Users },
     { id: 'courses', label: 'Courses', icon: BookOpen },
@@ -617,7 +618,7 @@ export const Header: React.FC<HeaderProps> = ({
                         <Icon className={`w-4 h-4 ${isActive ? 'text-amber-300' : 'text-slate-500'}`} />
                         <span>{tab.label}</span>
                       </div>
-                      {tab.badge !== undefined && tab.badge > 0 && (
+                      {tab.badge !== undefined && Number(tab.badge) > 0 && (
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
                             isActive ? 'bg-amber-400 text-blue-950' : 'bg-red-500 text-white'
@@ -725,7 +726,7 @@ export const Header: React.FC<HeaderProps> = ({
                         <Icon className={`w-4 h-4 ${isActive ? 'text-amber-300' : 'text-slate-500'}`} />
                         <span>{tab.label}</span>
                       </div>
-                      {tab.badge !== undefined && tab.badge > 0 && (
+                      {tab.badge !== undefined && Number(tab.badge) > 0 && (
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
                             isActive ? 'bg-amber-400 text-blue-950' : 'bg-red-500 text-white'
@@ -828,7 +829,7 @@ export const Header: React.FC<HeaderProps> = ({
                         <Icon className={`w-4 h-4 ${isActive ? 'text-amber-300' : 'text-slate-500'}`} />
                         <span>{tab.label}</span>
                       </div>
-                      {tab.badge !== undefined && tab.badge > 0 && (
+                      {tab.badge !== undefined && Number(tab.badge) > 0 && (
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
                             isActive ? 'bg-amber-400 text-blue-950' : 'bg-red-500 text-white'
@@ -917,7 +918,7 @@ export const Header: React.FC<HeaderProps> = ({
                         <Icon className={`w-4 h-4 ${isActive ? 'text-amber-300' : 'text-slate-500'}`} />
                         <span>{tab.label}</span>
                       </div>
-                      {tab.badge !== undefined && tab.badge > 0 && (
+                      {tab.badge !== undefined && Number(tab.badge) > 0 && (
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
                             isActive ? 'bg-amber-400 text-blue-950' : 'bg-red-500 text-white'

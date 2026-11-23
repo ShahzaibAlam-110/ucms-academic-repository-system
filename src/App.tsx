@@ -763,6 +763,16 @@ export default function App() {
             onUploadHandout={handleUploadHandout}
             onCreateAssessment={handleCreateAssessment}
             onResolveReport={handleResolveReport}
+            onAddAnnouncement={(a) => {
+              const item: Announcement = {
+                ...a,
+                id: Date.now(),
+                created_at: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' · PKT',
+                is_read: false,
+              };
+              setAnnouncements(prev => [item, ...prev]);
+              logAudit('FACULTY_NOTICE', `Faculty broadcasted update: ${item.title}`, currentUser?.full_name);
+            }}
           />
         )}
 

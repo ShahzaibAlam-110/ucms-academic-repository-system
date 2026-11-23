@@ -29,6 +29,8 @@ import {
 } from 'lucide-react';
 import { User, Course, TimetableSlot, Announcement, StudentReport } from '../data/mockDatabase';
 import { usePKTClock, formatPKTDateTimeString } from '../utils/timeUtils';
+import { AttachmentUploader, AttachmentData } from './AttachmentUploader';
+import { AnnouncementAttachment } from './AnnouncementAttachment';
 
 interface HodWorkspaceProps {
   user: User;
@@ -162,6 +164,10 @@ export const HodWorkspace: React.FC<HodWorkspaceProps> = ({
       uploader_role: 'HOD CS',
       uploader_name: 'Dr. Muhammad Asif',
       created_at: 'Spring 2025 · PKT',
+      attachment_name: 'Moderation_Committee_Guidelines.pdf',
+      attachment_url: '#',
+      attachment_type: 'pdf',
+      attachment_size: '1.5 MB',
     },
     {
       id: 902,
@@ -181,6 +187,7 @@ export const HodWorkspace: React.FC<HodWorkspaceProps> = ({
   const [noticeContent, setNoticeContent] = useState('');
   const [noticeAudience, setNoticeAudience] = useState<'cs_only' | 'teachers' | 'all'>('cs_only');
   const [noticePriority, setNoticePriority] = useState<'normal' | 'urgent'>('normal');
+  const [noticeAttachment, setNoticeAttachment] = useState<AttachmentData | null>(null);
   const [noticeSuccess, setNoticeSuccess] = useState('');
 
   // Handle Course Assignment from Faculty Modal
@@ -333,6 +340,10 @@ export const HodWorkspace: React.FC<HodWorkspaceProps> = ({
       uploader_name: 'Dr. Muhammad Asif',
       created_at: formatPKTDateTimeString(),
       is_read: false,
+      attachment_name: noticeAttachment?.name,
+      attachment_url: noticeAttachment?.url,
+      attachment_type: noticeAttachment?.type,
+      attachment_size: noticeAttachment?.size,
     };
 
     setLocalNotices((prev) => [newNotice, ...prev]);
@@ -345,11 +356,16 @@ export const HodWorkspace: React.FC<HodWorkspaceProps> = ({
         author: 'Dr. Muhammad Asif (Head of Department)',
         uploader_role: 'HOD CS',
         uploader_name: 'Dr. Muhammad Asif',
+        attachment_name: noticeAttachment?.name,
+        attachment_url: noticeAttachment?.url,
+        attachment_type: noticeAttachment?.type,
+        attachment_size: noticeAttachment?.size,
       });
     }
 
     setNoticeTitle('');
     setNoticeContent('');
+    setNoticeAttachment(null);
     setNoticeSuccess('Department circular broadcasted immediately across student and faculty portals.');
     setTimeout(() => setNoticeSuccess(''), 4000);
   };
@@ -1372,6 +1388,14 @@ export const HodWorkspace: React.FC<HodWorkspaceProps> = ({
                   />
                 </div>
 
+                {/* Optional Document, Image, or Page Notification Attachment */}
+                <AttachmentUploader
+                  attachment={noticeAttachment}
+                  onAttachmentChange={setNoticeAttachment}
+                  label="Attach Circular Document / Image / Page Notification"
+                  helperText="Optional: You can attach a document (PDF, Word, TXT), image/flyer (PNG, JPG), or page format notification. Leave empty if no file is needed."
+                />
+
                 <div className="flex justify-end">
                   <button
                     type="submit"
@@ -1448,6 +1472,14 @@ export const HodWorkspace: React.FC<HodWorkspaceProps> = ({
 
                       <h4 className="text-sm sm:text-base font-extrabold text-slate-900 leading-snug">{n.title}</h4>
                       <p className="text-xs text-slate-700 leading-relaxed whitespace-pre-line font-normal">{n.content}</p>
+
+                      {/* Attached Document or Image (if present) */}
+                      <AnnouncementAttachment
+                        attachmentName={n.attachment_name}
+                        attachmentUrl={n.attachment_url}
+                        attachmentType={n.attachment_type}
+                        attachmentSize={n.attachment_size}
+                      />
 
                       <div className="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-200/80">
                         <span className="text-[11px] text-slate-600 font-medium">Audience: <strong className="text-slate-800">{n.audience === 'teachers' ? 'Faculty Members' : n.audience === 'cs_only' ? 'CS Students' : 'All Department'}</strong></span>
