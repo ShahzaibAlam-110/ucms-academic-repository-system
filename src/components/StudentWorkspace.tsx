@@ -438,7 +438,7 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
 
   return (
     <div className="w-full bg-[#f8fafc] min-h-[calc(100vh-72px)] py-6 sm:py-8 lg:py-10 px-4 sm:px-6 lg:px-8 overflow-x-hidden">
-      
+
       {/* Toast Feedback */}
       {downloadFeedback && (
         <div className="fixed bottom-5 right-5 z-50 p-4 bg-blue-900 text-white rounded-xl shadow-xl flex items-center gap-2.5 text-xs font-bold animate-in slide-in-from-bottom-2">
@@ -454,10 +454,10 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
             ========================================================================= */}
         {currentTab === 'overview' && (
           <div className="space-y-6">
-            
+
             {/* 1. TOP GRID: STUDENT PROFILE BANNER (8 COLS) + NEXT UPCOMING CLASS (4 COLS) */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-              
+
               {/* LEFT: STUDENT WELCOME HERO BANNER (8 Cols) */}
               <div className="lg:col-span-8 bg-white rounded-2xl sm:rounded-3xl border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-5">
                 <div>
@@ -927,11 +927,10 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                       key={f.key}
                       type="button"
                       onClick={() => setAssessmentFilter(f.key)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0 ${
-                        assessmentFilter === f.key
-                          ? 'bg-blue-900 text-white shadow-2xs'
-                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0 ${assessmentFilter === f.key
+                        ? 'bg-blue-900 text-white shadow-2xs'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        }`}
                     >
                       {f.label}
                     </button>
@@ -961,13 +960,12 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                         <div className="space-y-3">
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <span
-                              className={`px-2 py-0.5 text-[10px] font-black rounded uppercase tracking-wider ${
-                                item.type === 'Quiz'
-                                  ? 'bg-purple-100 text-purple-900 border border-purple-200'
-                                  : item.type === 'Assignment'
+                              className={`px-2 py-0.5 text-[10px] font-black rounded uppercase tracking-wider ${item.type === 'Quiz'
+                                ? 'bg-purple-100 text-purple-900 border border-purple-200'
+                                : item.type === 'Assignment'
                                   ? 'bg-blue-100 text-blue-900 border border-blue-200'
                                   : 'bg-amber-100 text-amber-900 border border-amber-200'
-                              }`}
+                                }`}
                             >
                               {item.type}
                             </span>
@@ -1022,12 +1020,12 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                 if (assessmentFilter === 'quizzes') return a.type === 'Quiz';
                 return true;
               }).length === 0 && (
-                <div className="p-8 text-center bg-[#f8fafc] rounded-2xl border border-dashed border-slate-200 text-slate-500 text-xs space-y-1">
-                  <CheckCircle2 className="w-6 h-6 mx-auto text-emerald-600" />
-                  <p className="font-bold text-slate-800">No scheduled items under this filter</p>
-                  <p className="text-slate-400">All current assessment schedules and quizzes are up to date.</p>
-                </div>
-              )}
+                  <div className="p-8 text-center bg-[#f8fafc] rounded-2xl border border-dashed border-slate-200 text-slate-500 text-xs space-y-1">
+                    <CheckCircle2 className="w-6 h-6 mx-auto text-emerald-600" />
+                    <p className="font-bold text-slate-800">No scheduled items under this filter</p>
+                    <p className="text-slate-400">All current assessment schedules and quizzes are up to date.</p>
+                  </div>
+                )}
             </div>
 
             {/* 4. DEPARTMENT UPDATES & NOTICES CENTER (IN OVERVIEW) */}
@@ -1052,22 +1050,20 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                   <button
                     type="button"
                     onClick={() => setCircularFilter('all')}
-                    className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0 ${
-                      circularFilter === 'all'
-                        ? 'bg-blue-900 text-white shadow-2xs'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
+                    className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0 ${circularFilter === 'all'
+                      ? 'bg-blue-900 text-white shadow-2xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
                   >
                     All Announcements ({studentAnnouncements.length})
                   </button>
                   <button
                     type="button"
                     onClick={() => setCircularFilter('unread')}
-                    className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0 ${
-                      circularFilter === 'unread'
-                        ? 'bg-blue-900 text-white shadow-2xs'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
+                    className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0 ${circularFilter === 'unread'
+                      ? 'bg-blue-900 text-white shadow-2xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
                   >
                     Unread ({unreadCount})
                   </button>
@@ -1096,11 +1092,10 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                     return (
                       <div
                         key={notice.id}
-                        className={`rounded-xl border transition-all ${
-                          isExpanded
-                            ? 'bg-white border-blue-900 shadow-xs'
-                            : 'bg-[#f8fafc] border-slate-200 hover:border-slate-300'
-                        }`}
+                        className={`rounded-xl border transition-all ${isExpanded
+                          ? 'bg-white border-blue-900 shadow-xs'
+                          : 'bg-[#f8fafc] border-slate-200 hover:border-slate-300'
+                          }`}
                       >
                         {(() => {
                           const isHodNotice = notice.uploader_role === 'HOD CS' || notice.author.includes('HOD') || notice.author.includes('Tariq');
@@ -1118,11 +1113,10 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                                 <div className="flex flex-wrap items-center justify-between gap-2">
                                   <div className="flex flex-wrap items-center gap-2">
                                     <span
-                                      className={`px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider rounded-md border ${
-                                        isHodNotice
-                                          ? 'bg-amber-100 text-amber-950 border-amber-300'
-                                          : 'bg-blue-100 text-blue-950 border-blue-300'
-                                      }`}
+                                      className={`px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider rounded-md border ${isHodNotice
+                                        ? 'bg-amber-100 text-amber-950 border-amber-300'
+                                        : 'bg-blue-100 text-blue-950 border-blue-300'
+                                        }`}
                                     >
                                       [{roleLabel}]
                                     </span>
@@ -1205,7 +1199,7 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
 
             {/* 5. TWO-COLUMN SPLIT: LATEST COURSE HANDOUTS & SAVED BOOKMARKS */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              
+
               {/* LEFT: LATEST COURSE HANDOUTS (8 Cols) */}
               <div className="lg:col-span-8 bg-white rounded-2xl sm:rounded-3xl border border-slate-200 p-6 sm:p-7 shadow-xs space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200">
@@ -1278,7 +1272,7 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
 
               {/* RIGHT: SAVED BOOKMARKS & REPORT (4 Cols) */}
               <div className="lg:col-span-4 space-y-5">
-                
+
                 {/* Bookmarks Card */}
                 <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-xs space-y-4">
                   <div className="flex items-center justify-between pb-3 border-b border-slate-200">
@@ -1423,33 +1417,30 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                 <button
                   type="button"
                   onClick={() => setCircularFilter('all')}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer shrink-0 ${
-                    circularFilter === 'all'
-                      ? 'bg-blue-900 text-white shadow-2xs'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                  }`}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer shrink-0 ${circularFilter === 'all'
+                    ? 'bg-blue-900 text-white shadow-2xs'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
                 >
                   All Announcements ({studentAnnouncements.length})
                 </button>
                 <button
                   type="button"
                   onClick={() => setCircularFilter('unread')}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer shrink-0 ${
-                    circularFilter === 'unread'
-                      ? 'bg-blue-900 text-white shadow-2xs'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                  }`}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer shrink-0 ${circularFilter === 'unread'
+                    ? 'bg-blue-900 text-white shadow-2xs'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
                 >
                   Unread ({unreadCount})
                 </button>
                 <button
                   type="button"
                   onClick={() => setCircularFilter('inquiries')}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer shrink-0 ${
-                    circularFilter === 'inquiries'
-                      ? 'bg-blue-900 text-white shadow-2xs'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                  }`}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer shrink-0 ${circularFilter === 'inquiries'
+                    ? 'bg-blue-900 text-white shadow-2xs'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
                 >
                   My Inquiries & Responses ({studentReports.length})
                 </button>
@@ -1486,11 +1477,10 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
                           <span
-                            className={`px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${
-                              report.category === 'Timetable Issue'
-                                ? 'bg-indigo-100 text-indigo-900 border border-indigo-200'
-                                : 'bg-amber-100 text-amber-900 border border-amber-200'
-                            }`}
+                            className={`px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${report.category === 'Timetable Issue'
+                              ? 'bg-indigo-100 text-indigo-900 border border-indigo-200'
+                              : 'bg-amber-100 text-amber-900 border border-amber-200'
+                              }`}
                           >
                             {report.category}
                           </span>
@@ -1505,13 +1495,12 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                             {report.created_at}
                           </span>
                           <span
-                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                              report.status === 'Resolved'
-                                ? 'bg-emerald-100 text-emerald-900 border border-emerald-300'
-                                : report.status === 'Dismissed'
+                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${report.status === 'Resolved'
+                              ? 'bg-emerald-100 text-emerald-900 border border-emerald-300'
+                              : report.status === 'Dismissed'
                                 ? 'bg-slate-200 text-slate-800 border border-slate-300'
                                 : 'bg-amber-100 text-amber-900 border border-amber-300 animate-pulse'
-                            }`}
+                              }`}
                           >
                             {report.status}
                           </span>
@@ -1568,44 +1557,51 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                 <div className="space-y-3">
                   {studentAnnouncements
                     .filter((a) => (circularFilter === 'unread' ? !a.is_read : true))
-                .filter((a) => a.title.toLowerCase().includes(searchCirculars.toLowerCase()))
-                .map((notice) => {
-                  const isExpanded = expandedNoticeId === notice.id;
-                  return (
-                    <div
-                      key={notice.id}
-                      className={`rounded-2xl border transition-all ${
-                        isExpanded
-                          ? 'bg-white border-blue-900 shadow-xs'
-                          : 'bg-[#f8fafc] border-slate-200 hover:border-slate-300'
-                      }`}
-                    >
-                      {(() => {
-                        const isHodNotice = notice.uploader_role === 'HOD CS' || notice.author.includes('HOD') || notice.author.includes('Tariq');
-                        const roleLabel = notice.uploader_role || (isHodNotice ? 'HOD CS' : 'ADMIN');
-                        const uploaderDisplayName = notice.uploader_name || (isHodNotice ? 'Dr. Tariq Mahmood (Head of CS)' : 'Central Academic Administration');
+                    .filter((a) => a.title.toLowerCase().includes(searchCirculars.toLowerCase()))
+                    .map((notice) => {
+                      const isExpanded = expandedNoticeId === notice.id;
+                      return (
+                        <div
+                          key={notice.id}
+                          className={`rounded-2xl border transition-all ${isExpanded
+                            ? 'bg-white border-blue-900 shadow-xs'
+                            : 'bg-[#f8fafc] border-slate-200 hover:border-slate-300'
+                            }`}
+                        >
+                          {(() => {
+                            const isHodNotice = notice.uploader_role === 'HOD CS' || notice.author.includes('HOD') || notice.author.includes('Tariq');
+                            const roleLabel = notice.uploader_role || (isHodNotice ? 'HOD CS' : 'ADMIN');
+                            const uploaderDisplayName = notice.uploader_name || (isHodNotice ? 'Dr. Tariq Mahmood (Head of CS)' : 'Central Academic Administration');
 
-                        return (
-                          <button
-                            type="button"
-                            onClick={() => handleToggleNotice(notice.id)}
-                            className="w-full text-left p-4 sm:p-5 flex flex-col gap-2.5 cursor-pointer transition-colors"
-                          >
-                            {/* Top Line: Role, [URGENT] badge, Uploader Name, Date */}
-                            <div className="flex flex-wrap items-center justify-between gap-2">
-                              <div className="flex flex-wrap items-center gap-2">
-                                <span
-                                  className={`px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider rounded-md border ${
-                                    isHodNotice
-                                      ? 'bg-amber-100 text-amber-950 border-amber-300'
-                                      : 'bg-blue-100 text-blue-950 border-blue-300'
-                                  }`}
-                                >
-                                  [{roleLabel}]
-                                </span>
-                                {notice.priority === 'urgent' && (
-                                  <span className="px-2 py-0.5 text-[9.5px] font-black uppercase tracking-wider rounded border bg-red-50 text-red-700 border-red-200">
-                                    [URGENT]
+                            return (
+                              <button
+                                type="button"
+                                onClick={() => handleToggleNotice(notice.id)}
+                                className="w-full text-left p-4 sm:p-5 flex flex-col gap-2.5 cursor-pointer transition-colors"
+                              >
+                                {/* Top Line: Role, [URGENT] badge, Uploader Name, Date */}
+                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <span
+                                      className={`px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider rounded-md border ${isHodNotice
+                                        ? 'bg-amber-100 text-amber-950 border-amber-300'
+                                        : 'bg-blue-100 text-blue-950 border-blue-300'
+                                        }`}
+                                    >
+                                      [{roleLabel}]
+                                    </span>
+                                    {notice.priority === 'urgent' && (
+                                      <span className="px-2 py-0.5 text-[9.5px] font-black uppercase tracking-wider rounded border bg-red-50 text-red-700 border-red-200">
+                                        [URGENT]
+                                      </span>
+                                    )}
+                                    <span className="text-xs font-bold text-slate-800">
+                                      Uploaded by: <strong className="text-slate-900 font-extrabold">{uploaderDisplayName}</strong>
+                                    </span>
+                                  </div>
+
+                                  <span className="text-[11px] text-slate-400 font-mono">
+                                    {notice.created_at}
                                   </span>
                                 )}
                                 <span className="text-xs font-bold text-slate-800">
@@ -1620,19 +1616,39 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                                 )}
                               </div>
 
-                              <span className="text-[11px] text-slate-400 font-mono">
-                                {notice.created_at}
-                              </span>
-                            </div>
+                                {/* Middle: Title and Excerpt Preview */}
+                                <div>
+                                  <h3 className="text-sm font-bold text-slate-900 leading-snug">
+                                    {notice.title}
+                                  </h3>
+                                  <p className="text-xs text-slate-500 line-clamp-1 mt-1 font-normal">
+                                    {notice.content}
+                                  </p>
+                                </div>
 
-                            {/* Middle: Title and Excerpt Preview */}
-                            <div>
-                              <h3 className="text-sm font-bold text-slate-900 leading-snug">
-                                {notice.title}
-                              </h3>
-                              <p className="text-xs text-slate-500 line-clamp-1 mt-1 font-normal">
+                                {/* Bottom: Read Notice Action Bar */}
+                                <div className="flex items-center justify-between pt-1 border-t border-slate-100 text-xs">
+                                  <span className="text-[11px] font-medium text-slate-400">
+                                    {isExpanded ? 'Full circular open' : 'Click to expand details'}
+                                  </span>
+                                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-900 hover:text-blue-950 bg-blue-50 px-2.5 py-1 rounded-lg">
+                                    <span>{isExpanded ? 'Collapse' : 'Read Notice'}</span>
+                                    {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                                  </span>
+                                </div>
+                              </button>
+                            );
+                          })()}
+
+                          {isExpanded && (
+                            <div className="px-5 pb-5 pt-2 border-t border-slate-100 text-xs text-slate-600 space-y-3.5 animate-in fade-in duration-100">
+                              <p className="leading-relaxed font-normal bg-white p-3.5 rounded-xl border border-slate-100">
                                 {notice.content}
                               </p>
+                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] text-slate-400 pt-1">
+                                <span>Status: {notice.is_read ? 'Marked as Reviewed' : 'Unread'}</span>
+                                <span className="text-emerald-700 font-semibold">✓ Verified Institutional Circular Dispatch</span>
+                              </div>
                             </div>
 
                             {/* Bottom: Read Notice Action Bar */}
@@ -1668,15 +1684,13 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                             <span className="text-emerald-700 font-semibold">✓ Verified Institutional Circular Dispatch</span>
                           </div>
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </>
-          )}
-        </div>
-      )}
+                      );
+                    })}
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
         {/* =========================================================================
             VIEW 3: ENROLLED COURSES (MATCHING VIDEO EXACTLY)
@@ -1787,8 +1801,8 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                     </div>
                   );
                 })}
-              </div>
             </div>
+          </div>
         )}
 
         {/* =========================================================================
@@ -1845,17 +1859,15 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                     key={d.key}
                     type="button"
                     onClick={() => setSelectedDay(d.key)}
-                    className={`py-2.5 px-4 rounded-xl text-center whitespace-nowrap transition-all cursor-pointer shrink-0 flex items-center gap-2 ${
-                      isSelected
-                        ? 'bg-blue-900 text-white font-black shadow-xs'
-                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200/80 font-bold'
-                    }`}
+                    className={`py-2.5 px-4 rounded-xl text-center whitespace-nowrap transition-all cursor-pointer shrink-0 flex items-center gap-2 ${isSelected
+                      ? 'bg-blue-900 text-white font-black shadow-xs'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200/80 font-bold'
+                      }`}
                   >
                     <span className="text-xs">{d.label}</span>
                     <span
-                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
-                        isSelected ? 'bg-amber-400 text-blue-950 font-black' : 'bg-slate-200 text-slate-600'
-                      }`}
+                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${isSelected ? 'bg-amber-400 text-blue-950 font-black' : 'bg-slate-200 text-slate-600'
+                        }`}
                     >
                       {count}
                     </span>
@@ -1882,19 +1894,17 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                     key={d.key}
                     type="button"
                     onClick={() => setSelectedDay(d.key)}
-                    className={`py-3 px-3 rounded-xl text-center transition-all cursor-pointer ${
-                      isSelected
-                        ? 'bg-blue-900 text-white shadow-sm font-black ring-1 ring-blue-950'
-                        : 'bg-white/80 hover:bg-white text-slate-700 hover:text-slate-950 border border-slate-200/70 font-bold'
-                    }`}
+                    className={`py-3 px-3 rounded-xl text-center transition-all cursor-pointer ${isSelected
+                      ? 'bg-blue-900 text-white shadow-sm font-black ring-1 ring-blue-950'
+                      : 'bg-white/80 hover:bg-white text-slate-700 hover:text-slate-950 border border-slate-200/70 font-bold'
+                      }`}
                   >
                     <span className="text-sm font-extrabold block">
                       {d.label}
                     </span>
                     <span
-                      className={`text-[11px] font-bold mt-1 inline-block px-2 py-0.5 rounded-full ${
-                        isSelected ? 'bg-amber-400 text-blue-950 font-black' : 'bg-slate-200 text-slate-600'
-                      }`}
+                      className={`text-[11px] font-bold mt-1 inline-block px-2 py-0.5 rounded-full ${isSelected ? 'bg-amber-400 text-blue-950 font-black' : 'bg-slate-200 text-slate-600'
+                        }`}
                     >
                       {count} {count === 1 ? 'Class' : 'Classes'}
                     </span>
@@ -2015,11 +2025,10 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                   key={f.key}
                   type="button"
                   onClick={() => setBookmarkFilter(f.key)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
-                    bookmarkFilter === f.key
-                      ? 'bg-blue-900 text-white shadow-2xs'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                  }`}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${bookmarkFilter === f.key
+                    ? 'bg-blue-900 text-white shadow-2xs'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
                 >
                   {f.label}
                 </button>
@@ -2195,7 +2204,7 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
       {repositoryCourse && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
           <div className="relative w-full max-w-2xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-150">
-            
+
             {/* Modal Header */}
             <div className="p-5 sm:p-6 border-b border-slate-200 bg-[#f8fafc] flex items-start justify-between gap-4">
               <div>
@@ -2312,7 +2321,7 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
       {isReportModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
           <div className="relative w-full max-w-lg bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-150">
-            
+
             <div className="p-5 sm:p-6 border-b border-slate-200 bg-[#f8fafc] flex items-start justify-between">
               <div>
                 <h2 className="text-base font-bold text-slate-900">
@@ -2347,22 +2356,20 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
                   <button
                     type="button"
                     onClick={() => setReportCategory('Timetable Issue')}
-                    className={`p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                      reportCategory === 'Timetable Issue'
-                        ? 'border-blue-900 bg-blue-50/80 text-blue-950 ring-2 ring-blue-900/20'
-                        : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
-                    }`}
+                    className={`p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${reportCategory === 'Timetable Issue'
+                      ? 'border-blue-900 bg-blue-50/80 text-blue-950 ring-2 ring-blue-900/20'
+                      : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                      }`}
                   >
                     📅 Timetable Issue
                   </button>
                   <button
                     type="button"
                     onClick={() => setReportCategory('Handout Issue')}
-                    className={`p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                      reportCategory === 'Handout Issue'
-                        ? 'border-blue-900 bg-blue-50/80 text-blue-950 ring-2 ring-blue-900/20'
-                        : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
-                    }`}
+                    className={`p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${reportCategory === 'Handout Issue'
+                      ? 'border-blue-900 bg-blue-50/80 text-blue-950 ring-2 ring-blue-900/20'
+                      : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                      }`}
                   >
                     📄 Handout Issue
                   </button>
@@ -2494,7 +2501,7 @@ export const StudentWorkspace: React.FC<StudentWorkspaceProps> = ({
       {isPinModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
           <div className="relative w-full max-w-md bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-150">
-            
+
             <div className="p-5 border-b border-slate-200 bg-[#f8fafc] flex items-start justify-between">
               <div>
                 <h2 className="text-base font-bold text-slate-900">

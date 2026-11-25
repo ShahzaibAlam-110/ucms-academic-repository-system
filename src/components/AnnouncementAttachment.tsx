@@ -206,3 +206,4 @@ export const AnnouncementAttachment: React.FC<AnnouncementAttachmentProps> = ({
     </div>
   );
 };
+
