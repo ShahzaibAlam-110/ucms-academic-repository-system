@@ -2,33 +2,24 @@
 /**
  * UCMS UNIFIED 5-IN-1 DIGITAL CAMPUS PORTAL
  * Master Controller & Institutional Gateway
+ * Built with: HTML5, CSS3, Vanilla JavaScript, PHP 8+, MySQL
  * Institution: University College of Management and Sciences (UCMS), Khanewal
  */
 
 declare(strict_types=1);
 
-// Enable error reporting to prevent silent blank pages
+// Error reporting
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-// Deliver the unified collegiate interface matching localhost:3000 directly under XAMPP
-if (!isset($_GET['render']) || $_GET['render'] !== 'server') {
-    if (file_exists(__DIR__ . '/dist/index.html')) {
-        header('Content-Type: text/html; charset=UTF-8');
-        readfile(__DIR__ . '/dist/index.html');
-        exit;
-    }
-}
-
-session_start();
-
 require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/includes/auth.php';
 
 // Check if user is authenticated in active session
-$currentUser = $_SESSION['user'] ?? null;
+$currentUser = getCurrentUser();
 
-// Determine which view to render
+// Determine which view to render based on session state and user role
 if ($currentUser === null) {
     // 1. PUBLIC HOMEPAGE & CENTRAL LOGIN GATEWAY
     require_once __DIR__ . '/views/public_view.php';

@@ -15,15 +15,77 @@ if (!isset($_SESSION['user'])) {
     die('Authentication required. Please sign in to access official institutional materials.');
 }
 
-$currentUser = $_SESSION['user'];
-$handoutId   = (int)($_GET['id'] ?? 0);
-
-if ($handoutId <= 0) {
-    http_response_code(400);
-    die('Invalid handout identification parameter.');
-}
+$currentUser    = $_SESSION['user'];
+$handoutId      = (int)($_GET['id'] ?? 0);
+$announcementId = (int)($_GET['announcement_id'] ?? 0);
 
 $pdo = Database::getConnection();
+
+// -------------------------------------------------------------
+// CASE A: DOWNLOAD ANNOUNCEMENT ATTACHMENT
+// -------------------------------------------------------------
+if ($announcementId > 0) {
+    $stmt = $pdo->prepare("SELECT * FROM announcements WHERE id = :id LIMIT 1");
+    $stmt->execute([':id' => $announcementId]);
+    $ann = $stmt->fetch();
+
+    if (!$ann || empty($ann['attachment_url'])) {
+        http_response_code(404);
+        die('No attachment found for this notification.');
+    }
+
+    // Audit download
+    try {
+        $audit = $pdo->prepare("INSERT INTO audit_logs (user_id, action, details) VALUES (:uid, 'ANNOUNCEMENT_DOWNLOAD', :details)");
+        $audit->execute([
+            ':uid'     => $currentUser['id'],
+            ':details' => "Downloaded announcement attachment: {$ann['attachment_name']} (Notice #{$announcementId}: {$ann['title']})"
+        ]);
+    } catch (Exception $e) {}
+
+    $filePath = __DIR__ . '/' . ltrim($ann['attachment_url'], '/');
+    if (file_exists($filePath) && is_readable($filePath)) {
+        $mime = mime_content_type($filePath) ?: 'application/octet-stream';
+        $downloadName = $ann['attachment_name'] ?: basename($filePath);
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: ' . $mime);
+        header('Content-Disposition: attachment; filename="' . basename($downloadName) . '"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filePath));
+        readfile($filePath);
+        exit;
+    }
+
+    // Fallback: Generate informative notification slip
+    header('Content-Type: text/plain; charset=UTF-8');
+    header('Content-Disposition: attachment; filename="' . ($ann['attachment_name'] ?: 'notice_slip.txt') . '"');
+    echo "================================================================================\n";
+    echo "       UNIVERSITY COLLEGE OF MANAGEMENT AND SCIENCES (UCMS), KHANEWAL\n";
+    echo "                    Official Campus Notification Slip\n";
+    echo "================================================================================\n\n";
+    echo "Notice ID     : #" . $ann['id'] . "\n";
+    echo "Title         : " . $ann['title'] . "\n";
+    echo "Priority      : " . strtoupper($ann['priority']) . "\n";
+    echo "Audience      : " . strtoupper($ann['audience']) . "\n";
+    echo "Date Issued   : " . $ann['created_at'] . "\n";
+    echo "Attachment    : " . ($ann['attachment_name'] ?? 'None') . "\n";
+    echo "Downloaded By : " . $currentUser['full_name'] . " (" . strtoupper($currentUser['role']) . ")\n\n";
+    echo "NOTICE DETAILS:\n";
+    echo "--------------------------------------------------------------------------------\n";
+    echo $ann['content'] . "\n";
+    exit;
+}
+
+// -------------------------------------------------------------
+// CASE B: DOWNLOAD COURSE HANDOUT
+// -------------------------------------------------------------
+if ($handoutId <= 0) {
+    http_response_code(400);
+    die('Invalid document identification parameter.');
+}
 
 // Fetch handout with course details
 $stmt = $pdo->prepare("

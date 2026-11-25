@@ -1,6 +1,6 @@
 # UCMS Apache Configuration
-# Prioritize index.php so Apache delivers the unified application in XAMPP
-DirectoryIndex index.php dist/index.html index.html
+# Prioritize index.php so Apache delivers the unified PHP application under XAMPP / LAMP
+DirectoryIndex index.php
 
 # Prevent directory browsing
 Options -Indexes +FollowSymLinks
@@ -8,3 +8,13 @@ Options -Indexes +FollowSymLinks
 # Set UTF-8 encoding
 AddDefaultCharset UTF-8
 
+# Protect sensitive files and directories
+<FilesMatch "^\.(git|env|user\.ini|htaccess)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+<Files "database.sql">
+    Order allow,deny
+    Deny from all
+</Files>

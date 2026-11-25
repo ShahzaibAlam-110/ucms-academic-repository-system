@@ -234,10 +234,10 @@ CREATE TABLE `announcement_reads` (
   UNIQUE KEY `uk_ann_user` (`announcement_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `announcements` (`id`, `title`, `content`, `audience`, `priority`, `author_id`, `created_at`) VALUES
-(1, 'Midterm Examination Schedule Released - Fall 2026', 'All undergraduate students are advised to download their verified midterm examination slips from the portal. Exams begin Monday, Nov 24, 2026.', 'students', 'urgent', 4, '2026-11-05 09:00:00'),
-(2, 'Departmental Seminar: Modern LLM Fine-Tuning in PyTorch', 'Dr. Farhan Ali will conduct an intensive 3-hour seminar in CS Lab 2 on Friday at 02:30 PM. All BSCS 7th and 8th semester students are requested to attend.', 'cs_only', 'important', 3, '2026-11-04 14:20:00'),
-(3, 'Faculty Research Grant Applications Due', 'Faculty members are reminded that Higher Education Commission (HEC) National Research Program proposals must be submitted to the ORIC office by Nov 30.', 'teachers', 'normal', 4, '2026-11-02 11:15:00');
+INSERT INTO `announcements` (`id`, `title`, `content`, `audience`, `priority`, `author_id`, `attachment_name`, `attachment_url`, `attachment_type`, `attachment_size`, `created_at`) VALUES
+(1, 'Midterm Examination Schedule Released - Fall 2026', 'All undergraduate students are advised to download their verified midterm examination slips from the portal. Exams begin Monday, Nov 24, 2026.', 'students', 'urgent', 4, 'Midterm_Exam_Schedule_Fall2026.pdf', 'uploads/announcements/Midterm_Exam_Schedule_Fall2026.pdf', 'document', '245 KB', '2026-11-05 09:00:00'),
+(2, 'Departmental Seminar: Modern LLM Fine-Tuning in PyTorch', 'Dr. Farhan Ali will conduct an intensive 3-hour seminar in CS Lab 2 on Friday at 02:30 PM. All BSCS 7th and 8th semester students are requested to attend.', 'cs_only', 'important', 3, 'LLM_Seminar_Flyer.png', 'campus.jpg', 'image', '1.2 MB', '2026-11-04 14:20:00'),
+(3, 'Faculty Research Grant Applications Due', 'Faculty members are reminded that Higher Education Commission (HEC) National Research Program proposals must be submitted to the ORIC office by Nov 30.', 'teachers', 'normal', 4, NULL, NULL, NULL, NULL, '2026-11-02 11:15:00');
 
 -- 9. STUDENT COMPLAINTS & ACADEMIC ISSUE REPORTS (Quota Enforced: Max 3/Week)
 DROP TABLE IF EXISTS `student_reports`;

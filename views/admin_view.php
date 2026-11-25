@@ -89,7 +89,6 @@ $broadcastHistory = $annQuery->fetchAll();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Master Administrative Console | UCMS Khanewal</title>
-  <link rel="stylesheet" href="css/tailwind.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -559,6 +558,109 @@ $broadcastHistory = $annQuery->fetchAll();
           </div>
         </div>
 
+        <!-- Campus Broadcast Publisher Form -->
+        <div class="pt-6 border-t border-slate-200 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-black text-base text-blue-950">Publish Campus Broadcast / Notification</h3>
+              <p class="text-xs text-slate-500">Official institutional announcements displayed on public gateway, student portal, and faculty dashboards.</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-900 border border-blue-200">
+              Registrar Broadcast
+            </span>
+          </div>
+
+          <form id="admin-broadcast-form" class="space-y-4" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="post_announcement">
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Broadcast Title *</label>
+                <input type="text" name="title" required placeholder="e.g. Midterm Examination Schedule Released - Fall 2026" class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-900">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Priority Level *</label>
+                <select name="priority" class="w-full text-xs font-bold p-2.5 border border-slate-300 rounded-lg bg-white">
+                  <option value="normal">Normal Information</option>
+                  <option value="important">Important Directive</option>
+                  <option value="urgent">Urgent Announcement</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Target Audience *</label>
+              <select name="audience" class="w-full text-xs font-bold p-2.5 border border-slate-300 rounded-lg bg-white">
+                <option value="all">Entire Campus Community (Public & All Portals)</option>
+                <option value="students">All Enrolled Students</option>
+                <option value="teachers">All Faculty Members</option>
+                <option value="cs_only">Computer Science Department Only</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Announcement Body / Content *</label>
+              <textarea name="content" rows="3" required placeholder="Type the complete official notification, guidelines, or registrar directive..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-900"></textarea>
+            </div>
+
+            <!-- OPTIONAL FILE / PICTURE ATTACHMENT -->
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="block text-xs font-bold text-slate-800">
+                  📎 Attach Notification Document or Picture <span class="text-slate-400 font-normal">(Optional)</span>
+                </label>
+                <span class="text-[10px] text-slate-400">PDF, Word, Images (PNG, JPG) up to 25MB</span>
+              </div>
+              <input type="file" name="attachment" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp,.txt,.xls,.xlsx,.ppt,.pptx" class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-900 file:text-white hover:file:bg-blue-950 file:cursor-pointer">
+              <p class="text-[10px] text-slate-500 italic">You may upload any official document or page image to accompany this broadcast, or leave it empty.</p>
+            </div>
+
+            <div class="flex justify-end">
+              <button type="submit" id="admin-broadcast-submit-btn" class="px-5 py-2.5 bg-blue-900 hover:bg-blue-950 text-white text-xs font-bold rounded-lg transition-colors shadow-2xs flex items-center gap-2 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+                <span>Publish Campus Broadcast</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Campus Broadcasts History -->
+        <div class="pt-6 border-t border-slate-200 space-y-3">
+          <h3 class="font-black text-base text-blue-950">Active Broadcast Announcements (<?= count($broadcastHistory); ?>)</h3>
+          <div class="space-y-3">
+            <?php foreach ($broadcastHistory as $b): ?>
+              <div class="p-4 rounded-2xl border border-slate-200 bg-[#f8fafc] space-y-2">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <span class="font-black text-xs text-blue-950"><?= htmlspecialchars($b['title']); ?></span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold <?= $b['priority'] === 'urgent' ? 'bg-red-600 text-white' : 'bg-blue-100 text-blue-900'; ?>"><?= strtoupper($b['priority']); ?></span>
+                    <span class="text-[10px] text-slate-400 font-mono">[Audience: <?= strtoupper($b['audience']); ?>]</span>
+                  </div>
+                  <span class="text-[10px] text-slate-400"><?= date('M d, Y · h:i A', strtotime($b['created_at'])); ?></span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed"><?= htmlspecialchars($b['content']); ?></p>
+
+                <!-- Attachment info / actions -->
+                <?php if (!empty($b['attachment_url'])): ?>
+                  <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs">
+                    <span class="text-slate-600 font-medium">📎 <?= htmlspecialchars($b['attachment_name'] ?? 'Attachment'); ?> (<?= htmlspecialchars($b['attachment_size'] ?? ''); ?>)</span>
+                    <div class="flex items-center gap-2">
+                      <?php if ($b['attachment_type'] === 'image'): ?>
+                        <button type="button" onclick="openLightbox('<?= htmlspecialchars($b['attachment_url']); ?>', '<?= htmlspecialchars(addslashes($b['title'])); ?>', '<?= htmlspecialchars($b['attachment_size'] ?? ''); ?>')" class="px-2.5 py-1 text-[11px] font-bold text-blue-900 bg-blue-50 rounded hover:bg-blue-100">
+                          View Image
+                        </button>
+                      <?php endif; ?>
+                      <a href="download.php?announcement_id=<?= $b['id']; ?>" class="px-2.5 py-1 text-[11px] font-bold text-slate-700 bg-slate-100 rounded hover:bg-slate-200">
+                        Download
+                      </a>
+                    </div>
+                  </div>
+                <?php endif; ?>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -742,7 +844,44 @@ $broadcastHistory = $annQuery->fetchAll();
     function closeAdminProfileModal() {
       document.getElementById('admin-profile-modal').classList.add('hidden');
     }
+
+    // Admin Broadcast Form Submit Handler
+    const adminBroadcastForm = document.getElementById('admin-broadcast-form');
+    if (adminBroadcastForm) {
+      adminBroadcastForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const submitBtn = document.getElementById('admin-broadcast-submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Broadcasting...';
+
+        const formData = new FormData(adminBroadcastForm);
+        fetch('actions.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert(data.message || 'Campus broadcast published successfully!');
+            location.reload();
+          } else {
+            alert('Error: ' + (data.error || 'Failed to publish broadcast.'));
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Publish Campus Broadcast';
+          }
+        })
+        .catch(err => {
+          alert('Network communication error: ' + err.message);
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Publish Campus Broadcast';
+        });
+      });
+    }
   </script>
+
+  <!-- SHARED UCMS MODALS & VANILLA JS ENGINE -->
+  <?php require_once __DIR__ . '/../includes/modals.php'; ?>
+  <script src="js/main.js"></script>
 
 </body>
 </html>

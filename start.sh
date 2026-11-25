@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # UCMS Academic Repository & Management System - Local Launch Script
+# Pure Architecture: HTML5, CSS3, Vanilla JS, PHP 8+, MySQL
 # ==============================================================================
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -13,11 +14,13 @@ fi
 
 if [ -z "$PHP_BIN" ] || [ ! -x "$PHP_BIN" ]; then
     echo "❌ Error: PHP binary not found in /opt/lampp/bin/php or system PATH."
+    echo "   Please install PHP 8+ or start XAMPP."
     exit 1
 fi
 
 echo "=========================================================="
 echo "🎓 UCMS Academic Repository & Digital Campus Portal"
+echo "   Technology: HTML5 · CSS3 · Vanilla JS · PHP 8+ · MySQL"
 echo "=========================================================="
 echo "📁 Directory: $PROJECT_DIR"
 echo "🐘 PHP Engine: $PHP_BIN ($($PHP_BIN -r 'echo PHP_VERSION;'))"
@@ -26,42 +29,36 @@ echo "🐘 PHP Engine: $PHP_BIN ($($PHP_BIN -r 'echo PHP_VERSION;'))"
 if ! ($PHP_BIN -r "try { new PDO('mysql:host=127.0.0.1;port=3306;dbname=ucms_portal;charset=utf8mb4', 'root', ''); echo 'OK'; } catch (Exception \$e) { exit(1); }" >/dev/null 2>&1); then
     echo "⚠️  Warning: Could not connect to MySQL database 'ucms_portal' on 127.0.0.1:3306."
     echo "   Ensure XAMPP MySQL is active with: sudo /opt/lampp/lampp startmysql"
+    echo "   Or import database.sql into your MySQL server."
 else
     echo "✅ Database: MySQL 'ucms_portal' connected successfully."
 fi
 
 echo ""
-echo "🚀 Starting Services..."
+echo "🚀 Starting Full-Stack Application..."
 
-# Start PHP Backend on port 8000
+# Start PHP Built-in Server on port 8000
 $PHP_BIN -S 0.0.0.0:8000 > /tmp/ucms_php_server.log 2>&1 &
 PHP_PID=$!
-echo "   ▶ PHP Backend & Full-Stack Portal: http://localhost:8000 (PID: $PHP_PID)"
-
-# Start Vite Frontend on port 3000
-npm run dev > /tmp/ucms_vite_server.log 2>&1 &
-VITE_PID=$!
-echo "   ▶ React / Vite UI App:             http://localhost:3000 (PID: $VITE_PID)"
+echo "   ▶ Live Web Application: http://localhost:8000 (PID: $PHP_PID)"
 
 echo ""
 echo "=========================================================="
-echo "🔑 Demo Credentials (Password: password123 for all):"
+echo "🔑 Demo Institutional Credentials (Password: password123):"
 echo "   - Student : shahzaib  | shahzaib.alam@student.ucms.edu.pk"
 echo "   - Teacher : dr_amna   | dr.amna@ucms.edu.pk"
 echo "   - HOD     : hod_cs    | hod.cs@ucms.edu.pk"
 echo "   - Admin   : admin     | registrar@ucms.edu.pk"
 echo "=========================================================="
-echo "Press Ctrl+C to stop both servers."
+echo "Press Ctrl+C to stop the server."
 
 cleanup() {
     echo ""
-    echo "Shutting down servers..."
+    echo "Shutting down UCMS server..."
     kill $PHP_PID 2>/dev/null
-    kill $VITE_PID 2>/dev/null
-    echo "Servers stopped."
+    echo "Server stopped."
     exit 0
 }
 
 trap cleanup SIGINT SIGTERM
 wait
-

@@ -105,6 +105,20 @@ try {
             $reason     = trim($_POST['replacement_reason'] ?? '');
             $fileName   = trim($_POST['file_name'] ?? ('UCMS_' . time() . '.pdf'));
 
+            // Check if actual file was uploaded via $_FILES['file']
+            if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+                $upFile = $_FILES['file'];
+                $cleanUpName = preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', basename($upFile['name']));
+                $targetDir = __DIR__ . '/uploads/documents';
+                if (!is_dir($targetDir)) {
+                    mkdir($targetDir, 0777, true);
+                }
+                $destPath = $targetDir . '/' . $cleanUpName;
+                if (move_uploaded_file($upFile['tmp_name'], $destPath)) {
+                    $fileName = $cleanUpName;
+                }
+            }
+
             if ($handoutId > 0) {
                 // Non-Destructive Version Replacement:
                 // Fetch current version
@@ -436,13 +450,15 @@ try {
         // -------------------------------------------------------------
         // ADMIN: UPDATE PUBLIC CMS SETTINGS
         // -------------------------------------------------------------
+        case 'save_cms':
         case 'update_cms':
             if ($user['role'] !== 'admin') {
                 throw new Exception('Unauthorized: Master Admin role required.');
             }
 
             $keys = [
-                'stat_faculties', 'stat_faculty_members', 'stat_students', 'stat_labs',
+                'stat_faculties', 'stat_faculty_members', 'stat_faculty', 'stat_students', 'stat_labs',
+                'stat_programs', 'stat_alumni',
                 'admission_deadline', 'admission_term', 'campus_contact_phone',
                 'campus_contact_email', 'campus_address', 'institution_notice'
             ];
@@ -632,6 +648,131 @@ try {
             echo json_encode([
                 'success' => true,
                 'message' => "Report #{$reportId} status successfully updated to '{$newStatus}'."
+            ]);
+            break;
+
+        // -------------------------------------------------------------
+        // ADMIN / HOD / FACULTY: POST ANNOUNCEMENT / UPDATE
+        // WITH OPTIONAL PAGE NOTIFICATION / DOCUMENT / PICTURE ATTACHMENT
+        // -------------------------------------------------------------
+        case 'post_announcement':
+        case 'create_announcement':
+            if (!in_array($user['role'], ['admin', 'hod', 'teacher'], true)) {
+                throw new Exception('Unauthorized: Administrative or Faculty authorization required to publish announcements.');
+            }
+
+            $title    = trim($_POST['title'] ?? '');
+            $content  = trim($_POST['content'] ?? '');
+            $priority = trim($_POST['priority'] ?? 'normal');
+            $audience = trim($_POST['audience'] ?? 'all');
+
+            if (empty($title) || empty($content)) {
+                throw new Exception('Announcement title and notification message are required.');
+            }
+
+            if (!in_array($priority, ['normal', 'important', 'urgent'], true)) {
+                $priority = 'normal';
+            }
+
+            if (!in_array($audience, ['all', 'students', 'teachers', 'cs_only'], true)) {
+                $audience = 'all';
+            }
+
+            // Role constraints
+            if ($user['role'] === 'teacher' && !in_array($audience, ['students', 'all'], true)) {
+                $audience = 'students';
+            }
+            if ($user['role'] === 'hod' && $audience === 'all') {
+                $audience = 'cs_only';
+            }
+
+            $attachmentName = null;
+            $attachmentUrl  = null;
+            $attachmentType = null;
+            $attachmentSize = null;
+
+            // Handle optional file/image upload
+            if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] !== UPLOAD_ERR_NO_FILE) {
+                $file = $_FILES['attachment'];
+
+                if ($file['error'] !== UPLOAD_ERR_OK) {
+                    throw new Exception('File upload error (code ' . $file['error'] . ').');
+                }
+
+                if ($file['size'] > 25 * 1024 * 1024) {
+                    throw new Exception('Attachment exceeds maximum allowed file size of 25 MB.');
+                }
+
+                $origName = basename($file['name']);
+                $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
+
+                $imageExts = ['png', 'jpg', 'jpeg', 'webp', 'gif'];
+                $docExts   = ['pdf', 'doc', 'docx', 'txt', 'rtf', 'xls', 'xlsx', 'ppt', 'pptx'];
+                $allowedExts = array_merge($imageExts, $docExts);
+
+                if (!in_array($ext, $allowedExts, true)) {
+                    throw new Exception('Invalid file format. Allowed: Images (PNG, JPG, WEBP) or Documents (PDF, Word, Text, Excel, PowerPoint).');
+                }
+
+                $type = in_array($ext, $imageExts, true) ? 'image' : 'document';
+
+                $targetDir = __DIR__ . '/uploads/announcements';
+                if (!is_dir($targetDir)) {
+                    mkdir($targetDir, 0777, true);
+                }
+
+                $cleanBase = preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', pathinfo($origName, PATHINFO_FILENAME));
+                $safeName  = time() . '_' . substr(md5(uniqid('', true)), 0, 8) . '_' . $cleanBase . '.' . $ext;
+                $destPath  = $targetDir . '/' . $safeName;
+
+                if (!move_uploaded_file($file['tmp_name'], $destPath)) {
+                    throw new Exception('Failed to save uploaded attachment on server.');
+                }
+
+                $bytes = filesize($destPath);
+                if ($bytes >= 1048576) {
+                    $humanSize = number_format($bytes / 1048576, 1) . ' MB';
+                } elseif ($bytes >= 1024) {
+                    $humanSize = number_format($bytes / 1024, 0) . ' KB';
+                } else {
+                    $humanSize = $bytes . ' B';
+                }
+
+                $attachmentName = $origName;
+                $attachmentUrl  = 'uploads/announcements/' . $safeName;
+                $attachmentType = $type;
+                $attachmentSize = $humanSize;
+            }
+
+            $insStmt = $pdo->prepare("
+                INSERT INTO announcements (title, content, audience, priority, author_id, attachment_name, attachment_url, attachment_type, attachment_size, created_at)
+                VALUES (:title, :content, :aud, :prio, :author_id, :att_name, :att_url, :att_type, :att_size, NOW())
+            ");
+            $insStmt->execute([
+                ':title'     => $title,
+                ':content'   => $content,
+                ':aud'       => $audience,
+                ':prio'      => $priority,
+                ':author_id' => $user['id'],
+                ':att_name'  => $attachmentName,
+                ':att_url'   => $attachmentUrl,
+                ':att_type'  => $attachmentType,
+                ':att_size'  => $attachmentSize,
+            ]);
+            $newId = (int)$pdo->lastInsertId();
+
+            $roleName = strtoupper($user['role']);
+            $attDesc = $attachmentName ? " with attachment: {$attachmentName} ({$attachmentType})" : " (text-only)";
+            $audit = $pdo->prepare("INSERT INTO audit_logs (user_id, action, details) VALUES (:uid, 'ANNOUNCEMENT_POSTED', :details)");
+            $audit->execute([
+                ':uid'     => $user['id'],
+                ':details' => "{$roleName} {$user['full_name']} posted announcement #{$newId}: '{$title}' to [{$audience}]{$attDesc}"
+            ]);
+
+            echo json_encode([
+                'success' => true,
+                'id'      => $newId,
+                'message' => 'Update published successfully!' . ($attachmentName ? " Attachment uploaded: {$attachmentName}." : '')
             ]);
             break;
 

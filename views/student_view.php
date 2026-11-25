@@ -98,7 +98,6 @@ $bookmarks = [
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Academic Workspace | <?= htmlspecialchars($user['full_name']); ?> | UCMS Khanewal</title>
   <!-- Compiled Tailwind CSS for exact localhost:3000 collegiate styling -->
-  <link rel="stylesheet" href="css/tailwind.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -306,7 +305,14 @@ $bookmarks = [
                     <span class="px-1.5 py-0.2 rounded text-[9px] font-black bg-amber-500 text-white shrink-0">NEW</span>
                   <?php endif; ?>
                 </div>
-                <div class="text-[10px] text-slate-400 font-bold"><?= date('M d, Y', strtotime($ann['created_at'])); ?> · <?= strtoupper($ann['priority']); ?></div>
+                <div class="flex items-center gap-2 text-[10px] text-slate-400 font-bold">
+                  <span><?= date('M d, Y', strtotime($ann['created_at'])); ?> · <?= strtoupper($ann['priority']); ?></span>
+                  <?php if (!empty($ann['attachment_url'])): ?>
+                    <span class="inline-flex items-center gap-1 text-[9px] font-bold text-blue-700 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-200">
+                      📎 <?= $ann['attachment_type'] === 'image' ? 'Picture' : 'Document'; ?>
+                    </span>
+                  <?php endif; ?>
+                </div>
                 <p id="notice-desc-<?= $ann['id']; ?>" class="text-[11px] text-slate-600 line-clamp-2 leading-relaxed"><?= htmlspecialchars($ann['content']); ?></p>
               </div>
             <?php endforeach; ?>
@@ -424,6 +430,52 @@ $bookmarks = [
 
               <h3 class="text-base font-black text-slate-900"><?= htmlspecialchars($ann['title']); ?></h3>
               <p class="text-xs text-slate-700 leading-relaxed whitespace-pre-line"><?= htmlspecialchars($ann['content']); ?></p>
+
+              <!-- Optional Notification Attachment (Document or Picture) -->
+              <?php if (!empty($ann['attachment_url'])): ?>
+                <div class="mt-3 pt-3 border-t border-slate-200">
+                  <?php if ($ann['attachment_type'] === 'image'): ?>
+                    <div class="flex items-center gap-3.5 p-3 rounded-xl bg-white border border-slate-200 shadow-2xs">
+                      <img src="<?= htmlspecialchars($ann['attachment_url']); ?>" alt="Notice Image" class="w-16 h-16 rounded-lg object-cover cursor-pointer border border-slate-300 hover:opacity-90 transition-opacity shrink-0" onclick="openLightbox('<?= htmlspecialchars($ann['attachment_url']); ?>', '<?= htmlspecialchars(addslashes($ann['title'])); ?>', '<?= htmlspecialchars($ann['attachment_size'] ?? ''); ?>')">
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                          <span class="text-[10px] font-black uppercase text-blue-900 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">Picture Notification</span>
+                          <span class="text-[10px] text-slate-400 font-mono"><?= htmlspecialchars($ann['attachment_size'] ?? ''); ?></span>
+                        </div>
+                        <div class="text-xs font-bold text-slate-900 truncate mt-1"><?= htmlspecialchars($ann['attachment_name'] ?? 'Notice_Image.png'); ?></div>
+                        <div class="text-[11px] text-slate-500">Official image attached with update. Click to enlarge.</div>
+                      </div>
+                      <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" onclick="openLightbox('<?= htmlspecialchars($ann['attachment_url']); ?>', '<?= htmlspecialchars(addslashes($ann['title'])); ?>', '<?= htmlspecialchars($ann['attachment_size'] ?? ''); ?>')" class="px-3 py-1.5 text-xs font-bold text-blue-900 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition-colors cursor-pointer">
+                          👁 Enlarge
+                        </button>
+                        <a href="download.php?announcement_id=<?= $ann['id']; ?>" class="px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer">
+                          ↓ Download
+                        </a>
+                      </div>
+                    </div>
+                  <?php else: ?>
+                    <div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-white border border-slate-200 shadow-2xs">
+                      <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-10 h-10 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center shrink-0 text-red-600 font-black text-xs font-mono">
+                          DOC
+                        </div>
+                        <div class="min-w-0">
+                          <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-black uppercase text-red-800 bg-red-50 px-2 py-0.5 rounded border border-red-200">Attached Document</span>
+                            <span class="text-[10px] text-slate-400 font-mono"><?= htmlspecialchars($ann['attachment_size'] ?? ''); ?></span>
+                          </div>
+                          <div class="text-xs font-bold text-slate-900 truncate mt-0.5"><?= htmlspecialchars($ann['attachment_name'] ?? 'Notification_Document.pdf'); ?></div>
+                        </div>
+                      </div>
+                      <a href="download.php?announcement_id=<?= $ann['id']; ?>" class="px-3.5 py-1.5 text-xs font-bold text-white bg-blue-900 hover:bg-blue-950 rounded-lg shadow-2xs transition-colors shrink-0 inline-flex items-center gap-1.5 cursor-pointer">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        <span>Download Document</span>
+                      </a>
+                    </div>
+                  <?php endif; ?>
+                </div>
+              <?php endif; ?>
             </div>
           <?php endforeach; ?>
         </div>
@@ -829,6 +881,10 @@ $bookmarks = [
       });
     });
   </script>
+
+  <!-- SHARED UCMS MODALS & VANILLA JS ENGINE -->
+  <?php require_once __DIR__ . '/../includes/modals.php'; ?>
+  <script src="js/main.js"></script>
 
 </body>
 </html>

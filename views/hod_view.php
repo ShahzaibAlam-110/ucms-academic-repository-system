@@ -82,7 +82,6 @@ $deptAnnouncements = $annStmt->fetchAll();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HOD CS Console | <?= htmlspecialchars($user['full_name']); ?> | UCMS Khanewal</title>
-  <link rel="stylesheet" href="css/tailwind.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -394,17 +393,100 @@ $deptAnnouncements = $annStmt->fetchAll();
         </div>
       </div>
 
+      <!-- Issue Departmental Circular / Notice Form -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-2xs space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div>
+            <h3 class="text-base font-black text-slate-900">Issue Departmental Circular / Academic Notice</h3>
+            <p class="text-xs text-slate-500">Broadcast directives to Computer Science faculty, students, or campus community with optional document/picture attachment.</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-[#800020]/10 text-[#800020] border border-[#800020]/20">
+            HOD Executive Desk
+          </span>
+        </div>
+
+        <form id="hod-announcement-form" class="space-y-4" enctype="multipart/form-data">
+          <input type="hidden" name="action" value="post_announcement">
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Circular Title *</label>
+              <input type="text" name="title" required placeholder="e.g. CS Lab 2 Maintenance & Rescheduled Lecture Hours" class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-[#800020]">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Priority Level *</label>
+              <select name="priority" class="w-full text-xs font-bold p-2.5 border border-slate-300 rounded-lg bg-white">
+                <option value="important">Important Directive</option>
+                <option value="urgent">Urgent Notice</option>
+                <option value="normal">Normal Information</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Target Audience *</label>
+            <select name="audience" class="w-full text-xs font-bold p-2.5 border border-slate-300 rounded-lg bg-white">
+              <option value="cs_only">Computer Science Department (Students & Faculty)</option>
+              <option value="students">All Enrolled Students</option>
+              <option value="teachers">Department Faculty Only</option>
+              <option value="all">Entire University Campus</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Directive Body / Details *</label>
+            <textarea name="content" rows="3" required placeholder="Type the official notification details, guidelines, or departmental instructions..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-[#800020]"></textarea>
+          </div>
+
+          <!-- OPTIONAL FILE / PICTURE ATTACHMENT -->
+          <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold text-slate-800">
+                📎 Attach Notification Document or Picture <span class="text-slate-400 font-normal">(Optional)</span>
+              </label>
+              <span class="text-[10px] text-slate-400">PDF, Word, Images up to 25MB</span>
+            </div>
+            <input type="file" name="attachment" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp,.txt,.xls,.xlsx,.ppt,.pptx" class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#800020] file:text-white hover:file:bg-[#600018] file:cursor-pointer">
+            <p class="text-[10px] text-slate-500 italic">You may attach an official signed circular, timetable page, or event flyer, or leave it blank.</p>
+          </div>
+
+          <div class="flex justify-end">
+            <button type="submit" id="hod-ann-submit-btn" class="px-5 py-2.5 bg-[#800020] hover:bg-[#600018] text-white text-xs font-bold rounded-lg transition-colors shadow-2xs flex items-center gap-2 cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+              <span>Broadcast Departmental Circular</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
       <!-- Campus Announcements -->
       <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs space-y-4">
-        <h3 class="text-base font-black text-slate-900 pb-2 border-b border-slate-100">Institutional Circulars</h3>
+        <h3 class="text-base font-black text-slate-900 pb-2 border-b border-slate-100">Department & Campus Circulars</h3>
         <div class="space-y-3">
           <?php foreach ($deptAnnouncements as $a): ?>
-            <div class="border border-slate-100 rounded-xl p-3.5 bg-slate-50/50">
+            <div class="border border-slate-100 rounded-xl p-3.5 bg-slate-50/50 space-y-2">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-[#800020]"><?= htmlspecialchars($a['title']); ?></span>
                 <span class="text-[10px] text-slate-500"><?= date('M d, Y', strtotime($a['created_at'])); ?></span>
               </div>
               <p class="text-xs text-slate-600 mt-1"><?= htmlspecialchars($a['content']); ?></p>
+
+              <!-- Optional Attachment indicator / download -->
+              <?php if (!empty($a['attachment_url'])): ?>
+                <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs">
+                  <span class="text-slate-600 font-medium">📎 <?= htmlspecialchars($a['attachment_name'] ?? 'Notice Attachment'); ?> (<?= htmlspecialchars($a['attachment_size'] ?? ''); ?>)</span>
+                  <div class="flex items-center gap-2">
+                    <?php if ($a['attachment_type'] === 'image'): ?>
+                      <button type="button" onclick="openLightbox('<?= htmlspecialchars($a['attachment_url']); ?>', '<?= htmlspecialchars(addslashes($a['title'])); ?>', '<?= htmlspecialchars($a['attachment_size'] ?? ''); ?>')" class="px-2.5 py-1 text-[11px] font-bold text-blue-900 bg-blue-50 rounded hover:bg-blue-100">
+                        View Image
+                      </button>
+                    <?php endif; ?>
+                    <a href="download.php?announcement_id=<?= $a['id']; ?>" class="px-2.5 py-1 text-[11px] font-bold text-slate-700 bg-slate-100 rounded hover:bg-slate-200">
+                      Download
+                    </a>
+                  </div>
+                </div>
+              <?php endif; ?>
             </div>
           <?php endforeach; ?>
         </div>
@@ -844,6 +926,43 @@ $deptAnnouncements = $annStmt->fetchAll();
         btn.innerText = 'Save Decision';
       });
     }
+
+    // HOD Announcement Form Submit Handler
+    const hodAnnForm = document.getElementById('hod-announcement-form');
+    if (hodAnnForm) {
+      hodAnnForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const submitBtn = document.getElementById('hod-ann-submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Broadcasting...';
+
+        const formData = new FormData(hodAnnForm);
+        fetch('actions.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert(data.message || 'Departmental circular published successfully!');
+            location.reload();
+          } else {
+            alert('Error: ' + (data.error || 'Failed to publish circular.'));
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Broadcast Departmental Circular';
+          }
+        })
+        .catch(err => {
+          alert('Network communication error: ' + err.message);
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Broadcast Departmental Circular';
+        });
+      });
+    }
   </script>
+
+  <!-- SHARED UCMS MODALS & VANILLA JS ENGINE -->
+  <?php require_once __DIR__ . '/../includes/modals.php'; ?>
+  <script src="js/main.js"></script>
 </body>
 </html>

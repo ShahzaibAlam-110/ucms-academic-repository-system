@@ -337,3 +337,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+// =====================================================================
+// GLOBAL UCMS LIGHTBOX VIEWER FOR ANNOUNCEMENT ATTACHMENTS (VANILLA JS)
+// =====================================================================
+window.openLightbox = function(url, title, size) {
+  const modal = document.getElementById('ucms-lightbox-modal');
+  const img = document.getElementById('ucms-lightbox-img');
+  const titleEl = document.getElementById('ucms-lightbox-title');
+  const sizeEl = document.getElementById('ucms-lightbox-size');
+  const dlLink = document.getElementById('ucms-lightbox-download');
+
+  if (modal && img) {
+    img.src = url;
+    if (titleEl) titleEl.textContent = title || 'Notification Image';
+    if (sizeEl) sizeEl.textContent = size || '';
+    if (dlLink) dlLink.href = url;
+    modal.classList.add('active');
+  }
+};
+
+window.closeLightboxModal = function(e) {
+  const modal = document.getElementById('ucms-lightbox-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    const img = document.getElementById('ucms-lightbox-img');
+    if (img) img.src = '';
+  }
+};

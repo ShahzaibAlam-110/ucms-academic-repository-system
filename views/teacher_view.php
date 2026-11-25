@@ -90,7 +90,6 @@ foreach ($assignedCourses as $ac) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Faculty Console | <?= htmlspecialchars($user['full_name']); ?> | UCMS Khanewal</title>
-  <link rel="stylesheet" href="css/tailwind.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -501,17 +500,98 @@ foreach ($assignedCourses as $ac) {
         </div>
       </div>
 
+      <!-- Publish Class Notice / Academic Update Form -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-2xs space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div>
+            <h3 class="text-base font-black text-slate-900">Post Class Notice / Academic Update</h3>
+            <p class="text-xs text-slate-500">Publish directives or announcements to enrolled students or faculty with optional document/picture attachment.</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-900 border border-blue-200">
+            Faculty Announcement
+          </span>
+        </div>
+
+        <form id="faculty-announcement-form" class="space-y-4" enctype="multipart/form-data">
+          <input type="hidden" name="action" value="post_announcement">
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Notice Title *</label>
+              <input type="text" name="title" required placeholder="e.g. CS-401: Lab Quiz 2 Rescheduled to Thursday" class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-900">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Priority Level *</label>
+              <select name="priority" class="w-full text-xs font-bold p-2.5 border border-slate-300 rounded-lg bg-white">
+                <option value="normal">Normal Notice</option>
+                <option value="important">Important Directive</option>
+                <option value="urgent">Urgent Announcement</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Target Audience *</label>
+            <select name="audience" class="w-full text-xs font-bold p-2.5 border border-slate-300 rounded-lg bg-white">
+              <option value="students">Enrolled Students (Published on Student Portal)</option>
+              <option value="all">Entire Campus Community</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Notice Body / Message *</label>
+            <textarea name="content" rows="3" required placeholder="Provide instructions, timetable changes, syllabus references, or academic guidance..." class="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-900"></textarea>
+          </div>
+
+          <!-- OPTIONAL FILE / PICTURE ATTACHMENT -->
+          <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold text-slate-800">
+                📎 Attach Notification Document or Picture <span class="text-slate-400 font-normal">(Optional)</span>
+              </label>
+              <span class="text-[10px] text-slate-400">PDF, DOC, DOCX, PNG, JPG up to 25MB</span>
+            </div>
+            <input type="file" name="attachment" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp,.txt,.xls,.xlsx,.ppt,.pptx" class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-900 file:text-white hover:file:bg-blue-950 file:cursor-pointer">
+            <p class="text-[10px] text-slate-500 italic">You can upload any notice page in image/document format, or leave empty if not required.</p>
+          </div>
+
+          <div class="flex justify-end">
+            <button type="submit" id="faculty-ann-submit-btn" class="px-5 py-2.5 bg-[#800020] hover:bg-[#600018] text-white text-xs font-bold rounded-lg transition-colors shadow-2xs flex items-center gap-2 cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+              <span>Publish Notice / Update</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
       <!-- Department Circulars -->
       <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs space-y-4">
         <h3 class="text-base font-black text-slate-900 pb-2 border-b border-slate-100">Official Campus Circulars</h3>
         <div class="space-y-3">
           <?php foreach ($circulars as $circ): ?>
-            <div class="border border-slate-100 rounded-xl p-3.5 bg-slate-50/50">
+            <div class="border border-slate-100 rounded-xl p-3.5 bg-slate-50/50 space-y-2">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-[#800020]"><?= htmlspecialchars($circ['title']); ?></span>
                 <span class="text-[10px] text-slate-500"><?= date('M d, Y', strtotime($circ['created_at'])); ?></span>
               </div>
               <p class="text-xs text-slate-600 mt-1"><?= htmlspecialchars($circ['content']); ?></p>
+
+              <!-- Attachment indicator / action -->
+              <?php if (!empty($circ['attachment_url'])): ?>
+                <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs">
+                  <span class="text-slate-600 font-medium">📎 <?= htmlspecialchars($circ['attachment_name'] ?? 'Notice Attachment'); ?> (<?= htmlspecialchars($circ['attachment_size'] ?? ''); ?>)</span>
+                  <div class="flex items-center gap-2">
+                    <?php if ($circ['attachment_type'] === 'image'): ?>
+                      <button type="button" onclick="openLightbox('<?= htmlspecialchars($circ['attachment_url']); ?>', '<?= htmlspecialchars(addslashes($circ['title'])); ?>', '<?= htmlspecialchars($circ['attachment_size'] ?? ''); ?>')" class="px-2.5 py-1 text-[11px] font-bold text-blue-900 bg-blue-50 rounded hover:bg-blue-100">
+                        View Image
+                      </button>
+                    <?php endif; ?>
+                    <a href="download.php?announcement_id=<?= $circ['id']; ?>" class="px-2.5 py-1 text-[11px] font-bold text-slate-700 bg-slate-100 rounded hover:bg-slate-200">
+                      Download
+                    </a>
+                  </div>
+                </div>
+              <?php endif; ?>
             </div>
           <?php endforeach; ?>
         </div>
@@ -727,6 +807,43 @@ foreach ($assignedCourses as $ac) {
     function closeUploadModal() {
       document.getElementById('upload-handout-modal').classList.add('hidden');
     }
+
+    // Faculty Announcement Form Submit Handler
+    const facAnnForm = document.getElementById('faculty-announcement-form');
+    if (facAnnForm) {
+      facAnnForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const submitBtn = document.getElementById('faculty-ann-submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Publishing...';
+
+        const formData = new FormData(facAnnForm);
+        fetch('actions.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert(data.message || 'Notice published successfully!');
+            location.reload();
+          } else {
+            alert('Error: ' + (data.error || 'Failed to publish notice.'));
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Publish Notice / Update';
+          }
+        })
+        .catch(err => {
+          alert('Network communication error: ' + err.message);
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Publish Notice / Update';
+        });
+      });
+    }
   </script>
+
+  <!-- SHARED UCMS MODALS & VANILLA JS ENGINE -->
+  <?php require_once __DIR__ . '/../includes/modals.php'; ?>
+  <script src="js/main.js"></script>
 </body>
 </html>
