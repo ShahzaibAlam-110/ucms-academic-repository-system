@@ -20,3 +20,4 @@ if (!defined('UCMS_PAGE_TITLE')) {
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="assets/aistudio/logo_c68140aa.png">
 </head>
+

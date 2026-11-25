@@ -112,3 +112,4 @@ function logAudit(PDO $pdo, int $userId, string $action, string $details): void 
         error_log("Audit log failed: " . $e->getMessage());
     }
 }
+
